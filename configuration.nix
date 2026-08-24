@@ -19,10 +19,11 @@
 
   # Jovian NixOS optimization for Steam Deck
   jovian = {
-    devices.steamdeck = {
-      enable = true;
-      enableFwupdBiosUpdates = true;
-    };
+    devices.steamdeck.enable = true;
+    
+    # Replicates original SteamOS system/audio configurations perfectly
+    steamos.useSteamOSConfig = true;
+    
     steam = {
       enable = true;
       autoStart = true;          # Force boots directly into Gamescope Gaming Mode session
@@ -33,15 +34,8 @@
     decky-loader.enable = true;
   };
 
-  # CRITICAL AUDIO CONFIGURATION FOR STEAM DECK
-  security.rtkit.enable = true; # Required for low-latency audio processing
-  services.pipewire = {
-    enable = true;              # Activates PipeWire audio server
-    alsa.enable = true;         # Adds Advanced Linux Sound Architecture
-    alsa.support32Bit = true;   # Enables audio support for older 32-bit games
-    pulse.enable = true;        # Emulates PulseAudio for Steam application
-    wireplumber.enable = true;  # Modular session manager for PipeWire
-  };
+  # Low-latency audio support required by Jovian SteamOS subsystem
+  security.rtkit.enable = true;
 
   # Network configuration
   networking.hostName = "jovian-deck";
@@ -70,12 +64,15 @@
   # Desktop Environment configuration - GNOME
   services.xserver.enable = true;
   services.desktopManager.gnome.enable = true;
+  
+  # Crucial GDM integration to handle smooth handoff between Gamescope and GNOME
+  services.displayManager.gdm.enable = true;
 
   # System User configuration for sevara
   users.users.sevara = {
     isNormalUser = true;
     description = "sevara";
-    extraGroups = [ "networkmanager" "wheel" "video" "audio" ];
+    extraGroups = [ "networkmanager" "wheel" "video" "audio" "input" ];
     initialPassword = "baccano"; 
   };
 
