@@ -6,9 +6,15 @@
   networking.networkmanager.enable = true;
   time.timeZone = "Europe/Moscow"; 
 
-  boot.loader.systemd-boot.enable = true;
+  # Принудительный сброс видеорежима UEFI для выравнивания меню по горизонтали
+  boot.loader.systemd-boot = {
+    enable = true;
+    consoleMode = "0";
+  };
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.grub.enable = false;
+
+  # Разворот на 90 градусов по часовой стрелке при старте ядра ОС
   boot.kernelParams = [ 
     "video=DSI-1:panel_orientation=right_side_up" 
     "fbcon=rotate:1" 
@@ -17,9 +23,11 @@
   nixpkgs.config.allowUnfree = true;
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
+  # Настройки графики, звука и кнопок громкости
   jovian = {
     devices.steamdeck.enable = true;
     steamos.useSteamOSConfig = true; 
+    hardware.has.amd.gpu = true;
     decky-loader.enable = true;      
     steam = {
       enable = true;
@@ -28,6 +36,9 @@
       desktopSession = "gnome"; 
     };
   };
+
+  hardware.enableRedistributableFirmware = true;
+  security.rtkit.enable = true;
 
   services.xserver.enable = true;
   services.desktopManager.gnome.enable = true;
@@ -52,9 +63,10 @@
     };
   };
 
+  # Включение Throne с системной TUN-оберткой
   programs.throne = {
      enable = true;
-     # tunMode.enable = true; Add this line to enable tun mode
+     tunMode.enable = true;
   };
 
   environment.systemPackages = with pkgs; [
