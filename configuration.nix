@@ -10,12 +10,44 @@
   # Standard bootloader with rotated text console support
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-
+  
   # Kernel parameters to fix terminal and boot screen rotation on Steam Deck display
   boot.kernelParams = [ 
     "video=DSI-1:panel_orientation=right_side_up" 
     "fbcon=rotate:1" 
   ];
+
+  # Jovian NixOS optimization for Steam Deck
+  jovian = {
+    devices.steamdeck = {
+      enable = true;
+      enableFwupdBiosUpdates = true;
+    };
+    steam = {
+      enable = true;
+      autoStart = true;          # Force boots directly into Gamescope Gaming Mode session
+      user = "sevara";           # Set main Gaming Mode user to sevara
+      desktopSession = "gnome";  # Desktop mode target when you click "Switch to Desktop"
+    };
+    # Enable Decky Loader support declaratively
+    decky-loader.enable = true;
+  };
+
+  # CRITICAL AUDIO CONFIGURATION FOR STEAM DECK
+  security.rtkit.enable = true; # Required for low-latency audio processing
+  services.pipewire = {
+    enable = true;              # Activates PipeWire audio server
+    alsa.enable = true;         # Adds Advanced Linux Sound Architecture
+    alsa.support32Bit = true;   # Enables audio support for older 32-bit games
+    pulse.enable = true;        # Emulates PulseAudio for Steam application
+    wireplumber.enable = true;  # Modular session manager for PipeWire
+  };
+
+  # Explicitly enable Gamescope Compositor system-wide
+  programs.gamescope = {
+    enable = true;
+    capSysNice = true; # Grants optimization privileges to gamescope process
+  };
 
   # Network configuration
   networking.hostName = "jovian-deck";
@@ -44,13 +76,12 @@
   # Desktop Environment configuration - GNOME
   services.xserver.enable = true;
   services.desktopManager.gnome.enable = true;
-  services.displayManager.gdm.enable = true;
 
   # System User configuration for sevara
   users.users.sevara = {
     isNormalUser = true;
     description = "sevara";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "video" "audio" ]; # Added video and audio rights
     initialPassword = "baccano"; 
   };
 
@@ -64,6 +95,15 @@
     curl
     wget
   ];
+
+  # Throne VPN configuration with active tunMode tunneling
+  programs.throne = {
+     enable = true;
+     tunMode = {
+       enable = true;
+       setuid = true; 
+     };
+  };
 
   system.stateVersion = "24.11"; 
 }
