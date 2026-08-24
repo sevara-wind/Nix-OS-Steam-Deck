@@ -1,5 +1,5 @@
 {
-  description = "Official Jovian NixOS Configuration for Steam Deck";
+  description = "Official Jovian NixOS Configuration for Steam Deck without Limine";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
