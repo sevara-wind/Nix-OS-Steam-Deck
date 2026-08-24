@@ -64,9 +64,6 @@
   # Desktop Environment configuration - GNOME
   services.xserver.enable = true;
   services.desktopManager.gnome.enable = true;
-  
-  # Crucial GDM integration to handle smooth handoff between Gamescope and GNOME
-  services.displayManager.gdm.enable = true;
 
   # System User configuration for sevara
   users.users.sevara = {
