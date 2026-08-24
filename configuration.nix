@@ -43,12 +43,6 @@
     wireplumber.enable = true;  # Modular session manager for PipeWire
   };
 
-  # Explicitly enable Gamescope Compositor system-wide
-  programs.gamescope = {
-    enable = true;
-    capSysNice = true; # Grants optimization privileges to gamescope process
-  };
-
   # Network configuration
   networking.hostName = "jovian-deck";
   networking.networkmanager.enable = true;
@@ -81,7 +75,7 @@
   users.users.sevara = {
     isNormalUser = true;
     description = "sevara";
-    extraGroups = [ "networkmanager" "wheel" "video" "audio" ]; # Added video and audio rights
+    extraGroups = [ "networkmanager" "wheel" "video" "audio" ];
     initialPassword = "baccano"; 
   };
 
