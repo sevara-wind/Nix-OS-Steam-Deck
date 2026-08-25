@@ -6,12 +6,6 @@
   networking.networkmanager.enable = true;
   time.timeZone = "Europe/Moscow"; 
 
-  # Generate Russian locale files so Steam can map the OSK correctly
-  i18n.supportedLocales = [
-    "en_US.UTF-8/UTF-8"
-    "ru_RU.UTF-8/UTF-8"
-  ];
-
   boot.loader = {
     systemd-boot.enable = false;
     grub.enable = false;
@@ -68,15 +62,13 @@
   xdg.portal.enable = true;
   services.displayManager.gdm.enable = lib.mkForce false; 
 
-  services.envfs.enable = true;
-
   users.users.sevara = {
     isNormalUser = true;
     description = "sevara";
     extraGroups = [ "wheel" "networkmanager" "audio" "video" "input" ];
-    initialPassword = "baccano"; 
+    hashedPassword = "$6$sF3Izx227qeOCqjC$WMeWos2TsVsV8ELD7r6MBExaGvrWIVapON2x2GWii6KyXE7yqAPnoBfr08gZ5FMiO6M3MUt1t5453af16ZKsh/"; 
   };
-  users.users.root.initialPassword = "baccano";
+  users.users.root.hashedPassword = "$6$sF3Izx227qeOCqjC$WMeWos2TsVsV8ELD7r6MBExaGvrWIVapON2x2GWii6KyXE7yqAPnoBfr08gZ5FMiO6M3MUt1t5453af16ZKsh/";
 
   services.openssh = {
     enable = true;
@@ -106,7 +98,5 @@
     util-linux
     go
     psmisc
-    appimage-run
-    steam-run
   ];
 }
