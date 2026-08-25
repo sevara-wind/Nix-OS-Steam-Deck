@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, inputs, ... }:
 
 {
   system.stateVersion = "24.11"; 
@@ -67,6 +67,22 @@
   xdg.portal.enable = true;
   services.displayManager.gdm.enable = lib.mkForce false; 
 
+  programs.appimage = {
+    enable = true;
+    binfmt = true;
+  };
+
+  # Инжект SLS через оверлей с прямым чтением переданного inputs
+  nixpkgs.overlays = [
+    (final: prev: {
+      steam = prev.steam.override {
+        extraProfile = ''
+          export LD_PRELOAD="${inputs.enter-the-wired.packages.${final.system}.default}/lib/slsteam.so:''${LD_PRELOAD:-}"
+        '';
+      };
+    })
+  ];
+
   users.users.sevara = {
     isNormalUser = true;
     description = "sevara";
@@ -104,5 +120,10 @@
     go
     psmisc
     fastfetch
+    appimage-run
+    steam-run
+    bashInteractive
+    shared-mime-info
+    inputs.enter-the-wired.packages.${pkgs.system}.default
   ];
 }

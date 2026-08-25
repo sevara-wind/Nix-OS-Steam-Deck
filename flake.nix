@@ -1,14 +1,15 @@
 {
-  description = "Official Jovian NixOS Configuration for Steam Deck without Limine";
+  description = "Steam Deck Jovian NixOS Configuration";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     jovian.url = "github:Jovian-Experiments/Jovian-NixOS";
+    enter-the-wired.url = "github:ciscosweater/enter-the-wired";
   };
 
-  outputs = { self, nixpkgs, jovian, ... }@inputs: {
+  outputs = { self, nixpkgs, jovian, enter-the-wired, ... }@inputs: {
     nixosConfigurations.steamdeck = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
+      specialArgs = { inherit inputs; }; 
       modules = [
         jovian.nixosModules.default
         ./hardware-configuration.nix

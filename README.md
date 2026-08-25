@@ -6,7 +6,7 @@ This repository contains a reproducible declarative configuration for **NixOS** 
 
 ## 🛠️ Table of Contents
 1. [Repository Structure](#-repository-structure)
-2. [Step-by-Step Installation Guide (Fresh Deployment)](#-step-by-step-installation-guide-fresh-deployment)
+2. [Step-by-Step Installation Guide (Fresh Deployment on BTRFS)](#-step-by-step-installation-guide-fresh-deployment-on-btrfs)
 3. [System Reconstruction Guide (Subsequent Rebuilds)](#-system-reconstruction-guide-subsequent-rebuilds)
 4. [GitHub Synchronization](#-github-synchronization)
 
@@ -14,34 +14,40 @@ This repository contains a reproducible declarative configuration for **NixOS** 
 
 ## 📂 Repository Structure
 
-* `configuration.nix` — Core system configuration file containing Jovian optimizations, GNOME desktop environment, hardware tweaks, and global system utilities.
-* `flake.nix` — Pure declarative dependency definitions tracking the stable Nixpkgs and Jovian channels.
+* `configuration.nix` — Core system configuration file containing Jovian optimizations, GNOME desktop environment, hardware tweaks, global system utilities, and native `extraProfile` bindings for Enter The Wired (Accela + SLSsteam).
+* `flake.nix` — Pure declarative dependency definitions tracking the stable Nixpkgs channels and pulling external repository sources natively.
 * `wallpaper.png` — Background image asset automatically bundled and hashed into the Limine boot splash menu.
 
 ---
 
-## 🚀 Step-by-Step Installation Guide (Fresh Deployment)
+## 🚀 Step-by-Step Installation Guide (Fresh Deployment on BTRFS)
 
-Follow this comprehensive guide when installing NixOS from scratch on a new drive or restoring the system on your Steam Deck.
+Follow this comprehensive guide when installing NixOS from scratch using a modern BTRFS subvolume layout for maximum filesystem efficiency and snapshot features.
 
-### Step 1: Drive Partitioning & Precise Mounting
+### Step 1: Drive Partitioning, Subvolume Creation & Precise Mounting
 1. Boot your Steam Deck using a standard live NixOS installation USB drive and open the terminal.
 2. Partition your target NVMe drive (e.g., using `cfdisk /dev/nvme0n1`). Create two partitions:
    * **Partition 1:** 1 GB size, type `EFI System` (will become `/dev/nvme0n1p1`).
    * **Partition 2:** Remaining space, type `Linux filesystem` (will become `/dev/nvme0n1p2`).
-3. Format the partitions and set up the target mount structure **in this exact sequence** so the generator maps paths correctly:
+3. Format the devices, initialize the **BTRFS subvolumes**, and mount the runtime structure **in this exact sequence**:
    ```bash
-   # Format the drives
+   # 1. Format the partitions
    sudo mkfs.vfat -F32 -n EFI /dev/nvme0n1p1
-   sudo mkfs.ext4 -L nixos /dev/nvme0n1p2
+   sudo mkfs.btrfs -L nixos -f /dev/nvme0n1p2
    
-   # Mount the root filesystem first
+   # 2. Mount root temporarily to generate subvolume targets
    sudo mount /dev/nvme0n1p2 /mnt
+   sudo btrfs subvolume create /mnt/@
+   sudo btrfs subvolume create /mnt/@home
+   sudo btrfs subvolume create /mnt/@nix
+   sudo umount /mnt
    
-   # Create the boot mount point inside the mounted root
-   sudo mkdir -p /mnt/boot
+   # 3. Mount subvolumes natively with ZSTD compression optimization
+   sudo mount -o subvol=@,compress=zstd,noatime /dev/nvme0n1p2 /mnt
+   sudo mkdir -p /mnt/{home,nix,boot}
    
-   # Mount the EFI system partition into the boot mount point
+   sudo mount -o subvol=@home,compress=zstd,noatime /dev/nvme0n1p2 /mnt/home
+   sudo mount -o subvol=@nix,compress=zstd,noatime,ssd /dev/nvme0n1p2 /mnt/nix
    sudo mount /dev/nvme0n1p1 /mnt/boot
    ```
 
@@ -63,7 +69,7 @@ Generate the local hardware mappings and mount options unique to your specific d
 ```bash
 sudo nixos-generate-config --root /mnt
 ```
-*Note: This will safely generate your individual `hardware-configuration.nix` inside `/mnt/etc/nixos` alongside your existing files without modifying or overwriting your main configuration setups.*
+*Note: This will safely generate your individual `hardware-configuration.nix` inside `/mnt/etc/nixos` alongside your existing files, correctly capturing all BTRFS subvolume block mappings.*
 
 ### Step 5: Perform the System Installation
 Kick off the automated declarative system installation explicitly targeting your custom `steamdeck` Flake profile configuration:
@@ -104,7 +110,7 @@ Follow this routine whenever you modify your configurations on an already runnin
 
 ---
 
-## ☁️ GitHub Synchronization
+## 📂 GitHub Synchronization
 
 ### Push local updates to GitHub:
 ```bash
