@@ -2,9 +2,14 @@
 
 {
   system.stateVersion = "24.11"; 
-  networking.hostName = "steamdeck-nixos";
+  networking.hostName = "steamdeck";
   networking.networkmanager.enable = true;
   time.timeZone = "Europe/Moscow"; 
+
+  i18n.supportedLocales = [
+    "en_US.UTF-8/UTF-8"
+    "ru_RU.UTF-8/UTF-8"
+  ];
 
   boot.loader = {
     systemd-boot.enable = false;
@@ -57,7 +62,7 @@
   security.rtkit.enable = true;
 
   services.xserver.enable = true;
-  services.desktopManager.gnome.enable = true;
+  services.desktopManager.gnome.enable = true; 
   services.flatpak.enable = true;
   xdg.portal.enable = true;
   services.displayManager.gdm.enable = lib.mkForce false; 
@@ -98,5 +103,6 @@
     util-linux
     go
     psmisc
+    fastfetch
   ];
 }
