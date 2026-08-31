@@ -24,8 +24,8 @@ jobs:
 
       - name: Build ISO Image
         run: |
-          # Build using the correct isolated declarative output target path
-          nix build .#nixosConfigurations.isoProfile.config.system.build.isoImage -o result
+          # Build via the clean native packages flake output target
+          nix build .#iso -o result
 
       - name: Prepare ISO Artifact
         run: |
