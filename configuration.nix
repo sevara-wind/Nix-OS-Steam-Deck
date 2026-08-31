@@ -102,20 +102,14 @@ in
      tunMode.enable = true;
   };
 
+  # Enable graphical installer for Live-ISO deployment natively
+  installer.calamares.enable = true;
+
+  # All system packages merged into a single clean declarative block
   environment.systemPackages = with pkgs; [
     nano git htop firefox curl procps gawk gnugrep
     coreutils findutils util-linux go psmisc fastfetch
     appimage-run steam-run bashInteractive shared-mime-info
+    gparted # Added directly here to prevent attribute definition conflicts
   ];
-  installer.calamares.enable = true;
-  environment.systemPackages = with pkgs; [ gparted ];
-  # Enable graphical installer for Live-ISO deployment
-  installer.calamares.enable = true;
-  environment.systemPackages = with pkgs; [ gparted ];
-  # Enable graphical installer for Live-ISO deployment
-  installer.calamares.enable = true;
-  environment.systemPackages = with pkgs; [ gparted ];
-  # Enable graphical installer for Live-ISO deployment
-  installer.calamares.enable = true;
-  environment.systemPackages = with pkgs; [ gparted ];
 }
