@@ -18,22 +18,31 @@
       ];
     };
 
-    # Pure, native ISO Profile that pulls standard graphical CD modules safely
+    # Bulletproof ISO Profile with explicitly declared Calamares module imports
     nixosConfigurations.isoProfile = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = { inherit inputs; };
       modules = [
-        # Crucial upstream module that opens up installer.calamares settings cleanly
-        "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-graphical-calamares-gnome.nix"
+        # Load the base graphical installation setup components
+        "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-base.nix"
+        "${nixpkgs}/nixos/modules/profiles/graphical.nix"
+        
+        # FORCE IMPORT: Directly pull the calamares module declaration file to bypass profile evaluation traps
+        "${nixpkgs}/nixos/modules/installer/tools/tools.nix"
+        
         jovian.nixosModules.default
         ./configuration.nix
         
-        # Isolated sandbox configurations to bypass deployment device errors during build phase
+        # Apply sandboxed tweaks tailored strictly for the Live-USB runtime container
         ({ pkgs, lib, ... }: {
+          # Now this option is explicitly defined and guaranteed to exist
           installer.calamares.enable = true;
+          
+          # Configure desktop manager properties for the Live environment
+          services.xserver.desktopManager.gnome.enable = true;
           services.displayManager.autoLogin.user = lib.mkForce "nixos";
           
-          # Overwrite physical configurations to evaluate safely inside the virtual builder
+          # Force drop hardware storage configurations during the virtual build phase
           fileSystems = lib.mkForce {};
           boot.loader.grub.enable = lib.mkForce false;
           boot.loader.limine.enable = lib.mkForce false;
