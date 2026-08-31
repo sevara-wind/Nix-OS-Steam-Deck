@@ -5,7 +5,7 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     jovian.url = "github:Jovian-Experiments/Jovian-NixOS";
     
-    # Add official nixos-generators to build clean, error-free bootable ISOs
+    # Official nixos-generators repository tracked for build targets
     nixos-generators = {
       url = "github:nix-community/nixos-generators";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -24,8 +24,8 @@
       ];
     };
 
-    # Natively handled ISO installer generation target
-    packages.x86_64-linux.iso = nixos-generators.lib.nixosGenerate {
+    # Natively handled ISO installer generation target using updated attribute map
+    packages.x86_64-linux.iso = nixos-generators.nixosGenerate {
       pkgs = nixpkgs.legacyPackages.x86_64-linux;
       format = "install-iso";
       specialArgs = { inherit inputs; };
