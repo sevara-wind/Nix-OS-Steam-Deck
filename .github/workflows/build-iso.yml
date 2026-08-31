@@ -24,8 +24,8 @@ jobs:
 
       - name: Build ISO Image
         run: |
-          # Инжектим модуль Calamares графического установщика на лету силами генератора
-          nix run github:nix-community/nixos-generators -- --format install-iso --flake .#steamdeck -o result --eval-args "--arg modules '[ ({ pkgs, ... }: { installer.calamares.enable = true; }) ]'"
+          # Build using the correct isolated declarative output target path
+          nix build .#nixosConfigurations.isoProfile.config.system.build.isoImage -o result
 
       - name: Prepare ISO Artifact
         run: |
