@@ -1,48 +1,44 @@
-name: "Build and Release NixOS ISO"
+name: Build and Release GNOME ISO
 
 on:
   push:
     tags:
-      - "v*"
-
-permissions:
-  contents: write
+      - "v*.*" # Запуск только при создании тегов вроде v1.0, v2.0
+  workflow_dispatch: # Позволяет запускать сборку вручную через сайт
 
 jobs:
-  build-iso:
+  build-and-release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # Дает права на загрузку файлов в Релизы
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
-      - name: Install Nix
-        uses: cachix/install-nix-action@v31
-        with:
-          nix_path: nixpkgs=channel:nixos-unstable
-          extra_nix_config: |
-            experimental-features = nix-command flakes
+    - name: Install Nix
+      uses: cachix/install-nix-action@v30
+      with:
+        github_access_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build ISO Image
-        run: |
-          nix run github:nix-community/nixos-generators -- --format install-iso --flake .#steamdeck -o result
+    - name: Magic Nix Cache
+      uses: DeterminateSystems/magic-nix-cache-action@v8
 
-      - name: Prepare ISO Artifact
-        run: |
-          cd result/iso
-          ISO_NAME=$(ls *.iso)
-          mv "$ISO_NAME" "NixOS-Steam-Deck-Custom.iso"
+    - name: Build ISO Image
+      run: |
+        nix build .#nixosConfigurations.my-iso.config.system.build.isoImage --no-link --print-out-paths > result_path.txt
+        echo "ISO_PATH=$(cat result_path.txt)" >> $GITHUB_ENV
 
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: result/iso/NixOS-Steam-Deck-Custom.iso
-          name: "Release ${{ github.ref_name }}"
-          body: |
-            ### 🎮 Custom NixOS Steam Deck ISO Generated Successfully!
-            
-            **ISO Features:**
-            - **Calamares GUI Installer** with native "Install Alongside" (Dual-boot) support.
-            - Decoupled user and system state configuration via `options.nix`.
-            - Zero hardcoded password hashes (passwords are handled interactively post-installation).
-          draft: false
-          prerelease: false
+    - name: Prepare Artifact
+      run: |
+        mkdir -p dist
+        cp -v ${{ env.ISO_PATH }}/iso/*.iso dist/nixos-steamdeck-custom.iso
+
+    - name: Upload ISO to GitHub Release
+      uses: softprops/action-gh-release@v2
+      with:
+        files: dist/nixos-steamdeck-custom.iso
+        name: Release ${{ github.ref_name }}
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
