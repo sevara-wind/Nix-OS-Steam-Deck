@@ -1,0 +1,48 @@
+name: "Build and Release NixOS ISO"
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build-iso:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          nix_path: nixpkgs=channel:nixos-unstable
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+
+      - name: Build ISO Image
+        run: |
+          nix run github:nix-community/nixos-generators -- --format install-iso --flake .#steamdeck -o result
+
+      - name: Prepare ISO Artifact
+        run: |
+          cd result/iso
+          ISO_NAME=$(ls *.iso)
+          mv "$ISO_NAME" "NixOS-Steam-Deck-Custom.iso"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: result/iso/NixOS-Steam-Deck-Custom.iso
+          name: "Release ${{ github.ref_name }}"
+          body: |
+            ### 🎮 Custom NixOS Steam Deck ISO Generated Successfully!
+            
+            **ISO Features:**
+            - **Calamares GUI Installer** with native "Install Alongside" (Dual-boot) support.
+            - Decoupled user and system state configuration via `options.nix`.
+            - Zero hardcoded password hashes (passwords are handled interactively post-installation).
+          draft: false
+          prerelease: false
