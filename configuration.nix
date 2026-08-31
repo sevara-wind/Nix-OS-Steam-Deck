@@ -10,11 +10,21 @@ in
   
   time.timeZone = userOpts.timeZone; 
 
+  # Configure locales: System language is English, Russian is fully supported as secondary
   i18n.supportedLocales = [
     "en_US.UTF-8/UTF-8"
     "ru_RU.UTF-8/UTF-8"
   ];
-  i18n.defaultLocale = lib.strings.removeSuffix "/UTF-8" userOpts.defaultLocale;
+  i18n.defaultLocale = "en_US.UTF-8";
+
+  # Configure keyboard layout for X11/Desktop (Caps Lock toggles US/RU layouts)
+  services.xserver.xkb = {
+    layout = "us,ru";
+    options = "grp:caps_toggle";
+  };
+
+  # Console keyboard layout configuration
+  console.keyMap = "us";
 
   boot.loader = {
     systemd-boot.enable = false;
@@ -106,6 +116,5 @@ in
     nano git htop firefox curl procps gawk gnugrep
     coreutils findutils util-linux go psmisc fastfetch
     appimage-run steam-run bashInteractive shared-mime-info
-    gparted 
   ];
 }
