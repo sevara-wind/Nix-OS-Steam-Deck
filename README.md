@@ -14,7 +14,7 @@ This repository contains a reproducible declarative configuration for **NixOS** 
 
 ## 📂 Repository Structure
 
-* `configuration.nix` — Core system configuration file containing Jovian optimizations, GNOME desktop environment, hardware tweaks, global system utilities, and native `extraProfile` bindings for Enter The Wired (Accela + SLSsteam).
+* `configuration.nix` — Core system configuration file containing Jovian optimizations, GNOME desktop environment, hardware tweaks, and global system utilities.
 * `flake.nix` — Pure declarative dependency definitions tracking the stable Nixpkgs channels and pulling external repository sources natively.
 * `wallpaper.png` — Background image asset automatically bundled and hashed into the Limine boot splash menu.
 

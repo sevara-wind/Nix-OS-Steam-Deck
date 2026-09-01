@@ -4,10 +4,9 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     jovian.url = "github:Jovian-Experiments/Jovian-NixOS";
-    enter-the-wired.url = "github:ciscosweater/enter-the-wired";
   };
 
-  outputs = { self, nixpkgs, jovian, enter-the-wired, ... }@inputs: {
+  outputs = { self, nixpkgs, jovian, ... }@inputs: {
     nixosConfigurations.steamdeck = nixpkgs.lib.nixosSystem {
       specialArgs = { inherit inputs; }; 
       modules = [
