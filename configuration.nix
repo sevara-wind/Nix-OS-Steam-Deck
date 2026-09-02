@@ -58,6 +58,12 @@
     };
   };
 
+  # nix-crab: declarative SLSsteam + CloudRedirect (h3adcr-b equivalent)
+  programs.nix-crab = {
+    slssteam.enable = true;
+    cloudredirect.enable = true;
+  };
+
   hardware.enableRedistributableFirmware = true;
   security.rtkit.enable = true;
 
@@ -114,4 +120,17 @@
     bashInteractive
     shared-mime-info
   ];
+
+  # home-manager: nix-crab home module (SLSsteam config.yaml, netsock,
+  # CloudRedirect CLI + Flatpak app). Managed alongside the NixOS module.
+  home-manager = {
+    useGlobalPkgs = true;
+    useUserPackages = true;
+    users."sevara" = {
+      home.stateVersion = "24.11";
+      imports = [
+        inputs.nix-crab.homeModules.default
+      ];
+    };
+  };
 }
