@@ -85,26 +85,50 @@ Once the process finishes successfully, set your user root password when prompte
 
 Follow this routine whenever you modify your configurations on an already running system (e.g., adding new system packages, changing kernel arguments, or updating variables) to compile and activate changes on your device.
 
-### Step-by-Step Rebuild Routine:
+### Option A — One-command helper (recommended):
+```bash
+cd /etc/nixos
+sudo ./build.sh
+```
+`build.sh` syncs `/etc/nixos` to `origin/main`, refreshes `flake.lock`, pushes the lock back, and runs `nixos-rebuild switch --flake .#steamdeck` — everything in one go.
+
+### Option B — Manual rebuild routine:
 
 1. **Open your terminal and navigate to the workspace directory:**
    ```bash
    cd /etc/nixos
    ```
 
-2. **Stage your file modifications in Git (Mandatory step for Nix Flakes):**
-   *Crucial rule: Nix Flakes strictly restricts compiler access to tracked files only. If you modify `configuration.nix` or swap `wallpaper.png`, you MUST add them to the Git staging index using `git add`. Otherwise, the compiler will completely ignore your changes and rebuild the old configuration state.*
+2. **Pull the latest configuration from GitHub** (handles rewritten/diverged history without merge conflicts):
    ```bash
-   sudo git add configuration.nix
+   sudo git fetch origin
+   sudo git reset --hard origin/main
    ```
 
-3. **Compile and execute the system reconstruction switch:**
-   Trigger the switch operation explicitly pointing to your target `steamdeck` Flake profile using root privileges:
+3. **Stage your file modifications in Git (Mandatory step for Nix Flakes):**
+   *Crucial rule: Nix Flakes strictly restricts compiler access to tracked files only. If you modify `configuration.nix` or swap `wallpaper.png`, you MUST add them to the Git staging index using `git add`. Otherwise, the compiler will completely ignore your changes and rebuild the old configuration state.*
+   ```bash
+   sudo git add -A
+   ```
+
+4. **Refresh the lock file** (re-fetches remote inputs and fixes the volatile `steamidra` `narHash`):
+   ```bash
+   sudo nix flake lock
+   ```
+
+5. **Commit and push the lock** so it never goes stale and always builds for the next person:
+   ```bash
+   sudo git add flake.lock
+   sudo git commit -m "Update flake.lock"
+   sudo git push origin main
+   ```
+
+6. **Compile and execute the system reconstruction switch:**
    ```bash
    sudo nixos-rebuild switch --flake .#steamdeck
    ```
 
-4. **Reboot the console:**
+7. **Reboot the console:**
    ```bash
    sudo reboot
    ```
@@ -113,7 +137,9 @@ Follow this routine whenever you modify your configurations on an already runnin
 
 ## 📂 GitHub Synchronization
 
-### Push local updates to GitHub:
+Keep the repository on GitHub in sync with the config that is actually running on the Steam Deck.
+
+### Commit and push all local changes:
 ```bash
 cd /etc/nixos
 sudo git add -A
@@ -122,34 +148,12 @@ sudo git push origin main
 ```
 
 `git add -A` stages **every** change in the repo — `configuration.nix`, `flake.nix`, `flake.lock`,
-`hardware-configuration.nix`, `README.md`, `wallpaper.png`, new files and deletions — not just a
-hardcoded list. If you edited only one file, you can stage it explicitly instead.
+`hardware-configuration.nix`, `README.md`, `build.sh`, `wallpaper.png`, new files and deletions —
+not just a hardcoded list. If you edited only one file, you can stage it explicitly instead.
 
-### Build / update the system (recommended — one command):
-```bash
-cd /etc/nixos
-sudo ./build.sh
-```
-
-`build.sh` does everything automatically:
-1. `git fetch` + `git reset --hard origin/main` — pulls the latest commits and handles
-   rewritten/diverged histories (no merge conflicts).
-2. `nix flake lock` — re-fetches remote inputs and fixes the volatile
-   `steamidra` `narHash` drift that otherwise breaks the build.
-3. Commits and pushes the refreshed `flake.lock` so the repository always stays
-   valid (no stale-lock build failures for the next person).
-4. `nixos-rebuild switch --flake .#steamdeck` — builds and activates.
-
-Run it under `sudo`; a stable network connection is required for the first build.
-
-### Manual pull (only if you do not use build.sh):
-```bash
-cd /etc/nixos
-sudo git fetch origin
-sudo git reset --hard origin/main   # handles rewritten/diverged history
-sudo nix flake lock                 # refresh lock, then commit+push it
-sudo git add flake.lock
-sudo git commit -m "Update flake.lock"
-sudo git push origin main
-sudo nixos-rebuild switch --flake .#steamdeck
-```
+> Use an SSH remote to avoid password prompts on every push:
+> ```bash
+> sudo git remote set-url origin git@github.com:sevara-wind/Nix-OS-Steam-Deck.git
+> ```
+> (See **System Reconstruction Guide** above — both the `build.sh` helper and the manual routine
+> already refresh, commit and push `flake.lock` so the repository always stays buildable.)
