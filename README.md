@@ -16,7 +16,6 @@ This repository contains a reproducible declarative configuration for **NixOS** 
 
 * `configuration.nix` — Core system configuration file containing Jovian optimizations, GNOME desktop environment, hardware tweaks, and global system utilities.
 * `flake.nix` — Pure declarative dependency definitions tracking the stable Nixpkgs channels and pulling external repository sources natively.
-* `build.sh` — One-command helper that syncs, re-locks, pushes the lock and rebuilds the system.
 * `wallpaper.png` — Background image asset automatically bundled and hashed into the Limine boot splash menu.
 
 ---
@@ -111,33 +110,6 @@ Follow this routine whenever you modify your configurations on an already runnin
 
 ---
 
-## 🤖 Automated Build (build.sh)
-
-If you prefer a one-command helper that does everything automatically — pull latest `origin/main`,
-refresh `flake.lock`, push the lock back and rebuild — instead of the manual routine above:
-
-1. **Make sure you have an SSH remote** (so the script can push the lock without a password prompt):
-   ```bash
-   cd /etc/nixos
-   sudo git remote set-url origin git@github.com:sevara-wind/Nix-OS-Steam-Deck.git
-   ```
-
-2. **Run the helper as root:**
-   ```bash
-   cd /etc/nixos
-   sudo ./build.sh
-   ```
-
-`build.sh` performs, in order:
-1. `git fetch` + `git reset --hard origin/main` — pulls the latest commits and handles rewritten/diverged histories (no merge conflicts).
-2. `nix flake lock` — re-fetches remote inputs and fixes the volatile `steamidra` `narHash` drift.
-3. Commits and pushes the refreshed `flake.lock` so the repository always stays buildable.
-4. `nixos-rebuild switch --flake .#steamdeck` — builds and activates.
-
-A stable network connection is required on the first build.
-
----
-
 ## 📂 GitHub Synchronization
 
 ### Push local updates to GitHub:
@@ -149,7 +121,7 @@ sudo git push origin main
 ```
 
 `git add -A` stages **every** change in the repo — `configuration.nix`, `flake.nix`, `flake.lock`,
-`hardware-configuration.nix`, `README.md`, `build.sh`, `wallpaper.png`, new files and deletions —
+`hardware-configuration.nix`, `README.md`, `wallpaper.png`, new files and deletions —
 not just a hardcoded list. If you edited only one file, you can stage it explicitly instead.
 
 ### Pull remote updates to the Steam Deck:
