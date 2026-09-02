@@ -115,14 +115,23 @@ Follow this routine whenever you modify your configurations on an already runnin
 ### Push local updates to GitHub:
 ```bash
 cd /etc/nixos
-sudo git add configuration.nix wallpaper.png README.md
-sudo git commit -m "Update system configuration and installation documentation"
+sudo git add -A
+sudo git commit -m "Update system configuration"
 sudo git push origin main
 ```
+
+`git add -A` stages **every** change in the repo — `configuration.nix`, `flake.nix`, `flake.lock`,
+`hardware-configuration.nix`, `README.md`, `wallpaper.png`, new files and deletions — not just a
+hardcoded list. If you edited only one file, you can stage it explicitly instead.
 
 ### Pull remote updates to the Steam Deck:
 ```bash
 cd /etc/nixos
-sudo git pull origin main
+sudo git fetch origin
+# If the local history has diverged (e.g. a rewritten history), reset to remote:
+sudo git reset --hard origin/main
+# Otherwise a plain rebase-pull is enough:
+# sudo git pull --rebase origin main
+sudo nix flake lock
 sudo nixos-rebuild switch --flake .#steamdeck
 ```
