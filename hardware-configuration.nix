@@ -3,47 +3,49 @@
 # to /etc/nixos/configuration.nix instead.
 { config, lib, pkgs, modulesPath, ... }:
 
+
 {
   imports =
     [ (modulesPath + "/installer/scan/not-detected.nix")
     ];
+
 
   boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "usbhid" "sdhci_pci" ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-amd" ];
   boot.extraModulePackages = [ ];
 
+
   fileSystems."/" =
-    { device = "/dev/disk/by-uuid/38c177c3-80b8-4f40-a2e6-1d85cee43bf8";
+    { device = "/dev/disk/by-uuid/84010c24-2fc7-40e0-907e-af36542bced9";
       fsType = "btrfs";
       options = [ "subvol=@" ];
     };
 
-  fileSystems."/home" =
-    { device = "/dev/disk/by-uuid/38c177c3-80b8-4f40-a2e6-1d85cee43bf8";
-      fsType = "btrfs";
-      options = [ "subvol=@home" ];
-    };
 
   fileSystems."/nix" =
-    { device = "/dev/disk/by-uuid/38c177c3-80b8-4f40-a2e6-1d85cee43bf8";
+    { device = "/dev/disk/by-uuid/84010c24-2fc7-40e0-907e-af36542bced9";
       fsType = "btrfs";
       options = [ "subvol=@nix" ];
     };
 
-  fileSystems."/var/log" =
-    { device = "/dev/disk/by-uuid/38c177c3-80b8-4f40-a2e6-1d85cee43bf8";
+
+  fileSystems."/home" =
+    { device = "/dev/disk/by-uuid/84010c24-2fc7-40e0-907e-af36542bced9";
       fsType = "btrfs";
-      options = [ "subvol=@log" ];
+      options = [ "subvol=@home" ];
     };
 
+
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/0CA6-48E3";
+    { device = "/dev/disk/by-uuid/7B74-D0ED";
       fsType = "vfat";
       options = [ "fmask=0022" "dmask=0022" ];
     };
 
+
   swapDevices = [ ];
+
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
