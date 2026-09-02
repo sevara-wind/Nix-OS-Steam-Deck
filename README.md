@@ -16,6 +16,7 @@ This repository contains a reproducible declarative configuration for **NixOS** 
 
 * `configuration.nix` — Core system configuration file containing Jovian optimizations, GNOME desktop environment, hardware tweaks, and global system utilities.
 * `flake.nix` — Pure declarative dependency definitions tracking the stable Nixpkgs channels and pulling external repository sources natively.
+* `build.sh` — One-command helper that syncs, re-locks, pushes the lock and rebuilds the system.
 * `wallpaper.png` — Background image asset automatically bundled and hashed into the Limine boot splash menu.
 
 ---
@@ -124,14 +125,31 @@ sudo git push origin main
 `hardware-configuration.nix`, `README.md`, `wallpaper.png`, new files and deletions — not just a
 hardcoded list. If you edited only one file, you can stage it explicitly instead.
 
-### Pull remote updates to the Steam Deck:
+### Build / update the system (recommended — one command):
+```bash
+cd /etc/nixos
+sudo ./build.sh
+```
+
+`build.sh` does everything automatically:
+1. `git fetch` + `git reset --hard origin/main` — pulls the latest commits and handles
+   rewritten/diverged histories (no merge conflicts).
+2. `nix flake lock` — re-fetches remote inputs and fixes the volatile
+   `steamidra` `narHash` drift that otherwise breaks the build.
+3. Commits and pushes the refreshed `flake.lock` so the repository always stays
+   valid (no stale-lock build failures for the next person).
+4. `nixos-rebuild switch --flake .#steamdeck` — builds and activates.
+
+Run it under `sudo`; a stable network connection is required for the first build.
+
+### Manual pull (only if you do not use build.sh):
 ```bash
 cd /etc/nixos
 sudo git fetch origin
-# If the local history has diverged (e.g. a rewritten history), reset to remote:
-sudo git reset --hard origin/main
-# Otherwise a plain rebase-pull is enough:
-# sudo git pull --rebase origin main
-sudo nix flake lock
+sudo git reset --hard origin/main   # handles rewritten/diverged history
+sudo nix flake lock                 # refresh lock, then commit+push it
+sudo git add flake.lock
+sudo git commit -m "Update flake.lock"
+sudo git push origin main
 sudo nixos-rebuild switch --flake .#steamdeck
 ```
