@@ -59,9 +59,13 @@
   };
 
   # nix-crab: declarative SLSsteam + CloudRedirect (h3adcr-b equivalent)
+  # LuaTools stack: slssteam-moon injects the SLSsteam fork with a native Lua
+  # manifest importer; cloudredirect.moon makes the hook aware of stplug-in games.
   programs.nix-crab = {
     slssteam.enable = true;
+    slssteam-moon.enable = true;
     cloudredirect.enable = true;
+    cloudredirect.moon.enable = true;
   };
 
   hardware.enableRedistributableFirmware = true;
@@ -131,6 +135,14 @@
       imports = [
         inputs.nix-crab.homeModules.default
       ];
+      # LuaTools frontend (Lumen + plugin), cloud hook to match the NixOS side,
+      # plus the SteaMidra (SFF) and ACCELA desktop apps.
+      programs.nix-crab = {
+        luatools.enable = true;
+        cloudredirect.moon.enable = true;
+        steamidra.enable = true;
+        accela.enable = true;
+      };
     };
   };
 }
