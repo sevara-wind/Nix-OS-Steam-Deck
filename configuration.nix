@@ -125,22 +125,22 @@
     shared-mime-info
   ];
 
-  # home-manager: nix-crab home module (SLSsteam config.yaml, netsock,
-  # CloudRedirect CLI + Flatpak app). Managed alongside the NixOS module.
+  # home-manager: nix-crab home modules (SLSsteam config.yaml, netsock,
+  # CloudRedirect CLI + Flatpak app, LuaTools, ACCELA) WITHOUT the volatile
+  # steamidra module that broke builds. Imported from our own homeModules output.
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
     users."sevara" = {
       home.stateVersion = "24.11";
       imports = [
-        inputs.nix-crab.homeModules.default
+        inputs.self.homeModules.noSteamidra
       ];
-      # LuaTools frontend (Lumen + plugin), cloud hook to match the NixOS side,
-      # plus the SteaMidra (SFF) and ACCELA desktop apps.
+      # LuaTools frontend (Lumen + plugin) and cloud hook to match the NixOS
+      # side, plus the ACCELA desktop app.
       programs.nix-crab = {
         luatools.enable = true;
         cloudredirect.moon.enable = true;
-        steamidra.enable = true;
         accela.enable = true;
       };
     };
