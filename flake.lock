@@ -1,5 +1,77 @@
 {
   "nodes": {
+    "accela": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-tAyIIBbqVLP9c1WpUjFUsVYmGdRg6kz4vXqLXXJpPEk=",
+        "type": "file",
+        "url": "https://github.com/ciscosweater/enter-the-wired/releases/download/latest/deps.tar.gz"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://github.com/ciscosweater/enter-the-wired/releases/download/latest/deps.tar.gz"
+      }
+    },
+    "cloudredirect": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-885yi32OEso1apSVNV9tdvSwx4tk+Taywrwfp9R6PPg=",
+        "type": "file",
+        "url": "https://github.com/Selectively11/CloudRedirect/releases/latest/download/cloud_redirect.so"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://github.com/Selectively11/CloudRedirect/releases/latest/download/cloud_redirect.so"
+      }
+    },
+    "cloudredirect-cli": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-694YaLIyMi1YZ06iuDiUlK9qW3zLuax9ghjRhMlOCU0=",
+        "type": "file",
+        "url": "https://github.com/Selectively11/h3adcr-b/releases/download/linux-test/cloud_redirect_cli"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://github.com/Selectively11/h3adcr-b/releases/download/linux-test/cloud_redirect_cli"
+      }
+    },
+    "cloudredirect-moon": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1786461318,
+        "narHash": "sha256-iMf3iBPDJStVarW1PNEcrBYF0cd83T9FeSsWd6iaEgc=",
+        "owner": "swwayps",
+        "repo": "cloudredirect-moon",
+        "rev": "f07a3f59fec0e8bf086e8951e404f373c3bc8dd9",
+        "type": "github"
+      },
+      "original": {
+        "owner": "swwayps",
+        "repo": "cloudredirect-moon",
+        "type": "github"
+      }
+    },
+    "home-manager": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1788306281,
+        "narHash": "sha256-fzkZin1xxYFD5OveNVZudWErqNtr1Pjfdkc9qd8ROCc=",
+        "owner": "nix-community",
+        "repo": "home-manager",
+        "rev": "ead131eb1ec3088a11a23638b99f89c50422fbd3",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "home-manager",
+        "type": "github"
+      }
+    },
     "jovian": {
       "inputs": {
         "nix-github-actions": "nix-github-actions",
@@ -16,6 +88,121 @@
       "original": {
         "owner": "Jovian-Experiments",
         "repo": "Jovian-NixOS",
+        "type": "github"
+      }
+    },
+    "luatools-moon": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1786929252,
+        "narHash": "sha256-iIm9tNW7PenZ+MZ3tt7n8E5300NQDf8faPUfCpSrb1k=",
+        "owner": "swwayps",
+        "repo": "luatools-moon",
+        "rev": "c8c102a9f19a0b32435cf939304f7856005856c1",
+        "type": "github"
+      },
+      "original": {
+        "owner": "swwayps",
+        "repo": "luatools-moon",
+        "type": "github"
+      }
+    },
+    "lumen": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1786755166,
+        "narHash": "sha256-B2m3bscR35tNgdExll5UE7AuKb86cZ0I4IcLFBSf9VY=",
+        "owner": "swwayps",
+        "repo": "lumen",
+        "rev": "8840f60d8b55515c0a38146951dc7d2615c5d00b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "swwayps",
+        "repo": "lumen",
+        "type": "github"
+      }
+    },
+    "millennium": {
+      "inputs": {
+        "millennium-src": "millennium-src",
+        "nixpkgs": "nixpkgs_2"
+      },
+      "locked": {
+        "dir": "packages/nix",
+        "lastModified": 1786997133,
+        "narHash": "sha256-oefvOIPUZEQ9hHguR6kL0z1hR27ZbrFMclfQMI2KYAc=",
+        "owner": "SteamClientHomebrew",
+        "repo": "Millennium",
+        "rev": "a969edf744f9c82a96f80081e910e16bfc6b9dd0",
+        "type": "github"
+      },
+      "original": {
+        "dir": "packages/nix",
+        "owner": "SteamClientHomebrew",
+        "repo": "Millennium",
+        "type": "github"
+      }
+    },
+    "millennium-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1783268941,
+        "narHash": "sha256-MJLJ0I48HXgfOpISTAbDMYMUdWj9A6M+jGQz4uAvwyw=",
+        "owner": "SteamClientHomebrew",
+        "repo": "Millennium",
+        "rev": "f37f05bdbd4727d873a1ad83ce72d062ef9a0c48",
+        "type": "github"
+      },
+      "original": {
+        "owner": "SteamClientHomebrew",
+        "repo": "Millennium",
+        "rev": "f37f05bdbd4727d873a1ad83ce72d062ef9a0c48",
+        "type": "github"
+      }
+    },
+    "nix-crab": {
+      "inputs": {
+        "accela": "accela",
+        "cloudredirect": "cloudredirect",
+        "cloudredirect-cli": "cloudredirect-cli",
+        "cloudredirect-moon": "cloudredirect-moon",
+        "luatools-moon": "luatools-moon",
+        "lumen": "lumen",
+        "millennium": "millennium",
+        "nix-flatpak": "nix-flatpak",
+        "nixpkgs": "nixpkgs_3",
+        "sls-steam": "sls-steam",
+        "slsteam-moon": "slsteam-moon",
+        "steamidra": "steamidra",
+        "steamnetsock": "steamnetsock"
+      },
+      "locked": {
+        "lastModified": 1787040543,
+        "narHash": "sha256-It56CWxh2QnE3zu0SO2qbe5+DFPpl1SyzgOwZIX/6iA=",
+        "owner": "ItszFinn",
+        "repo": "nix-crab",
+        "rev": "234bcd92f6f92abf199152cd099da5048885dc8d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ItszFinn",
+        "repo": "nix-crab",
+        "type": "github"
+      }
+    },
+    "nix-flatpak": {
+      "locked": {
+        "lastModified": 1783368811,
+        "narHash": "sha256-0H8jDwR4Kegb3heaTrH1ftbgKfZVDT8JE+46uXxDy/Q=",
+        "owner": "gmodena",
+        "repo": "nix-flatpak",
+        "rev": "20d42f0ee98c9fe9f85e8d1de474f1409ed10d05",
+        "type": "github"
+      },
+      "original": {
+        "owner": "gmodena",
+        "repo": "nix-flatpak",
         "type": "github"
       }
     },
@@ -59,6 +246,38 @@
     },
     "nixpkgs_2": {
       "locked": {
+        "lastModified": 1781577229,
+        "narHash": "sha256-lrp67w8AulE9Ks53n27I45ADSzbOCn4H+CNW1Ck8B+8=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "567a49d1913ce81ac6e9582e3553dd90a955875f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "567a49d1913ce81ac6e9582e3553dd90a955875f",
+        "type": "github"
+      }
+    },
+    "nixpkgs_3": {
+      "locked": {
+        "lastModified": 1786862985,
+        "narHash": "sha256-FBJRXmbGXiSUDvYEbfLYRkckayyZ6SK1UEqhCrIZ2Cs=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "e5bdc4a41d4c072fe1e3787eaa0320a384741d44",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_4": {
+      "locked": {
         "lastModified": 1787498568,
         "narHash": "sha256-9i/VTdusq/+NM/tz+J1Re+ojkMB8MBf0QshnYfzHz30=",
         "owner": "nixos",
@@ -75,8 +294,71 @@
     },
     "root": {
       "inputs": {
+        "home-manager": "home-manager",
         "jovian": "jovian",
-        "nixpkgs": "nixpkgs_2"
+        "nix-crab": "nix-crab",
+        "nixpkgs": "nixpkgs_4"
+      }
+    },
+    "sls-steam": {
+      "inputs": {
+        "nixpkgs": [
+          "nix-crab",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1786818912,
+        "narHash": "sha256-GFRGB8n84MuixVcyKnLRfGKO0YajxOjiEH/a5lixg1Q=",
+        "owner": "AceSLS",
+        "repo": "SLSsteam",
+        "rev": "01a3b1ed08bc8f33fc25ee12d2b6e191a9963b38",
+        "type": "github"
+      },
+      "original": {
+        "owner": "AceSLS",
+        "repo": "SLSsteam",
+        "type": "github"
+      }
+    },
+    "slsteam-moon": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1786751350,
+        "narHash": "sha256-4pFej/xXjar5wJG88NyNhBw5PC68XR+V2O4EEjSWjY8=",
+        "owner": "swwayps",
+        "repo": "slsteam-moon",
+        "rev": "7ba753c8a2a06722e195747756a837b64718d358",
+        "type": "github"
+      },
+      "original": {
+        "owner": "swwayps",
+        "repo": "slsteam-moon",
+        "type": "github"
+      }
+    },
+    "steamidra": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-WR+VjtMnNluq576Eq/s+ct8ZUJ1PF74RhYgrVUm8+2c=",
+        "type": "file",
+        "url": "https://api.github.com/repos/Midrags/SFF/tags"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://api.github.com/repos/Midrags/SFF/tags"
+      }
+    },
+    "steamnetsock": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-PcdhlMpnCw2WtH6IKahbxb7cDOjjlBzL8rSLAGIVQcw=",
+        "type": "file",
+        "url": "https://github.com/yesyes0649/steamnetsock-patch/releases/latest/download/fix.so"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://github.com/yesyes0649/steamnetsock-patch/releases/latest/download/fix.so"
       }
     }
   },
